@@ -40,3 +40,8 @@ func AuthenticatePlayer(username, password, player_id):
 		result = true
 	print("Authentication result sent to gateway server")
 	rpc_id(gateway_id, "AuthenticationResults", result, player_id)
+
+
+@rpc
+func AuthenticationResults(result, player_id):
+	pass
