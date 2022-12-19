@@ -44,4 +44,5 @@ func AuthenticatePlayer(username, password, player_id):
 
 @rpc
 func AuthenticationResults(result, player_id):
+	print(str(result) + str(player_id))
 	pass
