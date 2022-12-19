@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqu7ra4jgalu"]
+
+[ext_resource type="Script" path="res://Scenes/Main/Authentication.gd" id="1_66pkn"]
+
+[node name="Authentication" type="Node"]
+script = ExtResource("1_66pkn")
