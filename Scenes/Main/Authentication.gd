@@ -1,6 +1,6 @@
 extends Node
 
-var network = ENetMultiplayerPeer.new()
+var authentication_server = ENetMultiplayerPeer.new()
 var port = 24599
 var max_servers = 5
 
@@ -10,12 +10,12 @@ func _ready():
 
 
 func StartServer():
-	network.create_server(port, max_servers)
-	multiplayer.set_multiplayer_peer(network)
+	authentication_server.create_server(port, max_servers)
+	multiplayer.set_multiplayer_peer(authentication_server)
 	print("Authentication server started")
 	
-	network.peer_connected.connect(_Peer_Connected)
-	network.peer_disconnected.connect(_Peer_Disconnected)
+	authentication_server.peer_connected.connect(_Peer_Connected)
+	authentication_server.peer_disconnected.connect(_Peer_Disconnected)
 
 
 func _Peer_Connected(gateway_id):
@@ -28,7 +28,7 @@ func _Peer_Disconnected(gateway_id):
 
 @rpc(any_peer)
 func AuthenticatePlayer(username, password, player_id):
-	print("Authentication request received")
+	var token
 	var gateway_id = multiplayer.get_remote_sender_id()
 	var result
 	print("Starting authentication")
@@ -38,11 +38,16 @@ func AuthenticatePlayer(username, password, player_id):
 	else:
 		print("Successful authentication")
 		result = true
-	print("Authentication result sent to gateway server")
-	rpc_id(gateway_id, "AuthenticationResults", result, player_id)
+	
+		randomize()
+		token = str(randi()).sha256_text() + str(Time.get_date_string_from_system())
+		var gameserver = "GameServer1" # this will have to be replaced with a load balancer
+		GameServers.DistributeLoginToken(token, gameserver)
+	print("Authentication result sent to gateway server: ", gateway_id)
+	rpc_id(gateway_id, "AuthenticationResults", result, player_id, token)
 
 
 @rpc
-func AuthenticationResults(result, player_id):
-	print(str(result) + str(player_id))
+func AuthenticationResults(result, player_id, token):
+	print(str(result) + str(player_id) + token)
 	pass
