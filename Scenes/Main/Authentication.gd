@@ -40,7 +40,7 @@ func AuthenticatePlayer(username, password, player_id):
 		result = true
 	
 		randomize()
-		token = str(randi()).sha256_text() + str(Time.get_date_string_from_system())
+		token = str(randi()).sha256_text() + str(int(Time.get_unix_time_from_system()))
 		var gameserver = "GameServer1" # this will have to be replaced with a load balancer
 		GameServers.DistributeLoginToken(token, gameserver)
 	print("Authentication result sent to gateway server: ", gateway_id)
