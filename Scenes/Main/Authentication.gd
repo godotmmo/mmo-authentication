@@ -26,7 +26,7 @@ func _Peer_Disconnected(gateway_id: int) -> void:
 	print("Gateway " + str(gateway_id) + " Disconnected")
 
 
-@rpc(any_peer)
+@rpc("any_peer")
 func AuthenticatePlayer(username: String, password: String, player_id: int) -> void:
 	var token: String
 	var hashed_password: String
@@ -52,7 +52,7 @@ func AuthenticatePlayer(username: String, password: String, player_id: int) -> v
 	rpc_id(gateway_id, "AuthenticationResults", result, player_id, token)
 
 
-@rpc(any_peer)
+@rpc("any_peer")
 func CreateAccount(username: String, password: String, player_id: int) -> void:
 	var gateway_id: int = multiplayer.get_remote_sender_id()
 	var result: bool
